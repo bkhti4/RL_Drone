@@ -1,0 +1,34 @@
+drone_hex: #namespace
+
+    #dqnlearn parameters
+    state_size: 2 # number of elements in the state array from observations.
+    n_actions: 4 # Number of actions used by algorithm and task
+    alpha: 1.0 # Learning Rate
+    alpha_decay: 0.01
+    gamma: 0.8 # future rewards value 0 none 1 a lot
+    epsilon: 1.0 # exploration, 0 none 1 a lot
+    epsilon_decay: 0.995 # how we reduse the exploration
+    epsilon_min: 0.01 # minimum value that epsilon can have
+    batch_size: 64 # maximum size of the batches sampled from memory
+    episodes_training: 100
+    n_win_ticks: -1400 # If the mean of rewards is bigger than this and have passed min_episodes, the task is considered finished
+    min_episodes: 50
+    max_env_steps: 50
+    monitor: False
+    quiet: False
+    
+
+    #environment variables
+    desired_pose:
+        x: 1.0
+        y: 1.0
+        z: 1.0
+    max_altitude: 2.0   # in meters
+    max_incl: 0.7       # in rads
+    
+    # those parameters are very important. They are affecting the learning experience
+    # They indicate how fast the control can be
+    # If the running step is too large, then there will be a long time between 2 ctrl commans
+    # If the pos_step is too large, then the changes in position will be very abrupt
+    running_step: 1.0 # amount of time the control will be executed
+    pos_step: 0.25     # increment in position, depends on the control for each command

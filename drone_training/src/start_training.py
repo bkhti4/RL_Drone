@@ -31,10 +31,6 @@ if __name__ == '__main__':
         
     # Set the logging system
     rospack = rospkg.RosPack()
-    pkg_path = rospack.get_path('drone_training')
-    outdir = pkg_path + '/training_results'
-    env = wrappers.Monitor(env, outdir, force=True) 
-    rospy.loginfo ( "Monitor Wrapper started")
 
     last_time_steps = numpy.ndarray(0)
 
@@ -49,7 +45,7 @@ if __name__ == '__main__':
     nsteps = rospy.get_param("/nsteps")
 
     # Initialises the algorithm that we are going to use for learning
-    qlearn = qlearn.QLearn(actions=range(env.action_space.n),
+    qlearn = qlearn.QLearn(actions=range(4),
                     alpha=Alpha, gamma=Gamma, epsilon=Epsilon)
     initial_epsilon = qlearn.epsilon
 
@@ -71,7 +67,7 @@ if __name__ == '__main__':
         
         # Show on screen the actual situation of the robot
         #env.render()
-        
+        rospy.loginfo ("STEPS NOT TAKEN")        
         # for each episode, we test the robot for nsteps
         for i in range(nsteps):
 
@@ -103,11 +99,12 @@ if __name__ == '__main__':
     
     rospy.loginfo ( ("\n|"+str(nepisodes)+"|"+str(qlearn.alpha)+"|"+str(qlearn.gamma)+"|"+str(initial_epsilon)+"*"+str(epsilon_discount)+"|"+str(highest_reward)+"| PICTURE |"))
 
-    l = last_time_steps.tolist()
-    l.sort()
+    if len(last_time_steps) > 0:
+	    l = last_time_steps.tolist()
+	    l.sort()
 
-    #print("Parameters: a="+str)
-    rospy.loginfo("Overall score: {:0.2f}".format(last_time_steps.mean()))
-    rospy.loginfo("Best 100 score: {:0.2f}".format(reduce(lambda x, y: x + y, l[-100:]) / len(l[-100:])))
+	    #print("Parameters: a="+str)
+	    rospy.loginfo("Overall score: {:0.2f}".format(last_time_steps.mean()))
+	    rospy.loginfo("Best 100 score: {:0.2f}".format(reduce(lambda x, y: x + y, l[-100:]) / len(l[-100:])))
 
-    env.close()
+    #env.close()
